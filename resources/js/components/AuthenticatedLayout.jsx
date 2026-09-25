@@ -34,7 +34,7 @@ function AuthenticatedLayout() {
     }, [navigate]);
 
     if (checkingSession) {
-        return <p>Checking session...</p>;
+        return (<p>Checking session...</p>);
     }
 
     return (
