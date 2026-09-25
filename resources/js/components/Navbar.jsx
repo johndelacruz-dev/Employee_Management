@@ -16,16 +16,28 @@ function Navbar() {
     return (
         <div>
             <div>
-                <p>Employee Management</p>
+                <div>
+                    <p>Employee Management</p>
+                </div>
+                <div>
+                    <p>
+                        Main Menu
+                    </p>
+                    <Link>Home</Link>
+                    <Link>View Employees</Link>
+                    <Link>Add Employees</Link>
+                    <button onClick={handleLogout}>Logout</button>
+                </div>
             </div>
+            
             <div>
-                <p>
-                    Main Menu
-                </p>
-                <Link>Home</Link>
-                <Link>View Employees</Link>
-                <Link>Add Employees</Link>
-                <button onClick={handleLogout}>Logout</button>
+                <div>
+                    <p>Management</p>
+                    <p>Home</p>
+                </div>
+                <div>
+                    <div><p>U</p></div>
+                </div>
             </div>
         </div>
     );
