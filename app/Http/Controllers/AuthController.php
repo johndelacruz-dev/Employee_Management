@@ -28,12 +28,35 @@ class AuthController extends Controller
             ], 401);
         }
 
+        $request->session()->put('user_id', $user->user_id);
+        $request->session()->put('username', $user->username);
+        $request->session()->put('privilege_level', $user->privilege_level);
+
         return response()->json([
             'message' => 'Login successful',
             'user' => [
                 'user_id' => $user->user_id,
                 'username' => $user->username,
                 'privilege_level' => $user->privilege_level,
+            ]
+        ]);
+    }
+
+
+    public function me(Request $request)
+    {
+        if (!$request->session()->has('user_id')) {
+            return response()->json([
+                'authenticated' => false
+            ], 401);
+        }
+
+        return response()->json([
+            'authenticated' => true,
+            'user' => [
+                'user_id' => $request->session()->get('user_id'),
+                'username' => $request->session()->get('username'),
+                'privilege_level' => $request->session()->get('privilege_level'),
             ]
         ]);
     }
