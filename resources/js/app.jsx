@@ -4,13 +4,16 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import Login from "./pages/Login";
 import Landing from "./pages/Landing";
+import AuthenticatedLayout from "./components/AuthenticatedLayout";
 
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/login" element={<Login />}/>
-                <Route path="/landing" element={<Landing />}/>
+                <Route element={<AuthenticatedLayout />}>
+                    <Route path="/landing" element={<Landing />} />
+                </Route>
             </Routes>
         </BrowserRouter>
     );

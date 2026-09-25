@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Navbar() {
     return (
         <div>
@@ -8,9 +10,9 @@ function Navbar() {
                 <p>
                     Main Menu
                 </p>
-                <Link>
-                    Home
-                </Link>
+                <Link>Home</Link>
+                <Link>View Employees</Link>
+                <Link>Add Employees</Link>
             </div>
         </div>
     );
