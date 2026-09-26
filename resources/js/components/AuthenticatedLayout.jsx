@@ -43,7 +43,7 @@ function AuthenticatedLayout() {
 
                 <Navbar />
 
-                <main className="ml-[260px]">
+                <main className="ml-[40px] md:ml-[260px] mt-[-540px]">
                     <Outlet />
                 </main>
 

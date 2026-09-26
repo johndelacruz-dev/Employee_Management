@@ -1,7 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 function Navbar() {
     const navigate = useNavigate();
+
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     async function handleLogout() {
         const response = await fetch("/api/logout", {
@@ -14,10 +17,10 @@ function Navbar() {
     }
     
     return (
-         <div className="flex flex-col h-screen">
+        <div className="flex flex-col h-screen">
 
             {/* Sidebar */}
-            <div className="fixed left-0 top-0 h-screen w-[260px] border-r-2 border-gray-200">
+            <div className={`fixed left-0 top-0 h-screen w-[260px] border-r-2 border-gray-200 bg-white transition-transform duration-300 md:translate-x-0 z-31 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
 
                 {/* Logo */}
                 <div className="border-b-2 border-gray-200 px-5 py-4 font-bold">
@@ -62,8 +65,55 @@ function Navbar() {
                 </div>
             </div>
 
-            {/* Right-side header */}
-            <div className="ml-[260px] flex-1">
+            {/* Mobile arrow button */}
+            <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className={`
+                    fixed
+                    left-0
+                    top-1/3
+                    z-[100]
+                    flex
+                    h-14
+                    w-10
+                    -translate-y-1/2
+                    items-center
+                    justify-center
+                    rounded-r-lg
+                    border
+                    border-gray-300
+                    bg-gray-200
+                    text-2xl
+                    text-gray-700
+                    shadow-md
+                    hover:bg-gray-300
+                    transition-transform
+                    duration-300
+                    ${sidebarOpen ? "translate-x-[260px]" : "translate-x-0"}
+
+                    md:hidden
+                `}
+            >
+                <span className="text-xl">
+                    {sidebarOpen ? "‹" : "›"}
+                </span>
+            </button>
+
+            {/* Top-side header */}
+            <div className={`
+                ml-0 
+                flex-1 
+                bg-white
+                fixed
+                top-0
+                right-0
+                left-0
+                md:left-[260px]
+                z-30
+                border-b-2
+                border-gray-200
+                bg-white
+            `}>
 
                 <div className="flex items-center justify-between border-b-2 border-gray-200 px-5 py-3">
 
