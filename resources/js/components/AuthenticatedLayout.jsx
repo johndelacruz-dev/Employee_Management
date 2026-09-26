@@ -39,9 +39,15 @@ function AuthenticatedLayout() {
 
     return (
         <>
-            <Navbar />
+            <div className="min-h-screen">
 
-            <Outlet />
+                <Navbar />
+
+                <main className="ml-[260px]">
+                    <Outlet />
+                </main>
+
+            </div>
         </>
     );
 }
