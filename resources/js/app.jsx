@@ -7,6 +7,7 @@ import Landing from "./pages/Landing";
 import AuthenticatedLayout from "./components/AuthenticatedLayout";
 import GuestRoute from "./components/GuestRoute";
 import ViewEmployees from "./pages/ViewEmployees";
+import AddEmployees from "./pages/AddEmployees";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route element={<AuthenticatedLayout />}>
                     <Route path="/landing" element={<Landing />} />
                     <Route path="/employees" element={<ViewEmployees />} />
+                    <Route path="/employees/add" element={<AddEmployees />} />
                 </Route>
             </Routes>
         </BrowserRouter>
