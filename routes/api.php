@@ -17,3 +17,5 @@ Route::middleware(['web', 'auth:web', 'permission:add employees'])->post('/emplo
 Route::middleware(['web', 'auth:web', 'permission:edit employees'])->put('/employees/{employee}', [EmployeeController::class, 'update']);
 
 Route::middleware(['web', 'auth:web', 'permission:delete employees'])->delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
+
+Route::middleware(['web', 'auth:web', 'permission:view employees'])->get('/employee-statistics', [EmployeeController::class, 'statistics']);

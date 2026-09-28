@@ -7,6 +7,43 @@ use App\Models\Employee;
 
 class EmployeeController extends Controller
 {
+    public function statistics()
+    {
+        $totalEmployees = Employee::count();
+
+        $statusCounts = Employee::query()
+            ->join(
+                'employee_status_table',
+                'employee_table.employee_status_id',
+                '=',
+                'employee_status_table.employee_status_id'
+            )
+            ->selectRaw('
+                employee_status_table.employee_status_name as status,
+                COUNT(*) as count
+            ')
+            ->groupBy(
+                'employee_status_table.employee_status_id',
+                'employee_status_table.employee_status_name'
+            )
+            ->get();
+
+        $statuses = $statusCounts->map(function ($status) use ($totalEmployees) {
+            return [
+                'status' => $status->status,
+                'count' => $status->count,
+                'percentage' => $totalEmployees > 0
+                    ? round(($status->count / $totalEmployees) * 100, 2)
+                    : 0,
+            ];
+        });
+
+        return response()->json([
+            'total_employees' => $totalEmployees,
+            'statuses' => $statuses,
+        ]);
+    }
+
     public function destroy(Employee $employee)
     {
         $employee->delete();

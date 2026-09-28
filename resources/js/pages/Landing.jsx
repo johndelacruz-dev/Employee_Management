@@ -1,51 +1,42 @@
+import { useEffect, useState } from "react";
+
 function Landing() {
-    const employeeStatuses = [
-        {
-            name: "Full-time Employee",
-            color: "bg-green-600",
-            value: "loading...",
-        },
-        {
-            name: "Part-time Employee",
-            color: "bg-sky-500",
-            value: "loading...",
-        },
-        {
-            name: "Contract Employee",
-            color: "bg-yellow-400",
-            value: "loading...",
-        },
-        {
-            name: "Temporary Employee",
-            color: "bg-purple-500",
-            value: "loading...",
-        },
-        {
-            name: "Probationary Employee",
-            color: "bg-orange-500",
-            value: "loading...",
-        },
-        {
-            name: "Permanent Employee",
-            color: "bg-teal-500",
-            value: "loading...",
-        },
-        {
-            name: "Seasonal Employee",
-            color: "bg-pink-400",
-            value: "loading...",
-        },
-        {
-            name: "Intern Employee",
-            color: "bg-slate-700",
-            value: "loading...",
-        },
-        {
-            name: "Remote Employee",
-            color: "bg-red-500",
-            value: "loading...",
-        },
-    ];
+    const [statistics, setStatistics] = useState(null);
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:8000/api/employee-statistics", {
+            credentials: "include"
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                setStatistics(data);
+            })
+            .catch(error => {
+                console.error("Error loading employee statistics:", error);
+            });
+    }, []);
+
+    const statusColors = {
+        "Full-time": "bg-green-600",
+        "Part-time": "bg-sky-500",
+        "Contract": "bg-yellow-400",
+        "Temporary": "bg-purple-500",
+        "Probationary": "bg-orange-500",
+        "Permanent": "bg-teal-500",
+        "Seasonal": "bg-pink-400",
+        "Intern": "bg-slate-700",
+        "Remote": "bg-red-500",
+    };
+
+    const employeeStatuses = statistics
+    ? statistics.statuses.map((status) => ({
+        name: `${status.status} Employee`,
+        color: statusColors[status.status],
+        value: status.percentage,
+        count: status.count,
+    }))
+    : [];
 
     return (
         <div className="p-5 md:p-6">
@@ -72,7 +63,7 @@ function Landing() {
                     </p>
 
                     <p className="mt-1 text-2xl font-semibold text-gray-800">
-                        loading...
+                        {statistics ? statistics.total_employees : "loading..."}
                     </p>
                 </div>
             </div>
@@ -157,20 +148,39 @@ function Landing() {
                             </p>
 
                             <div className="h-[30px] w-full rounded-md bg-gray-100">
-                                <div
-                                    className={`
-                                        flex
-                                        h-full
-                                        w-0
-                                        items-center
-                                        justify-center
-                                        rounded-md
-                                        text-sm
-                                        text-white
-                                        ${status.color}
-                                    `}
-                                >
-                                    {status.value}
+                                <div className="relative h-full w-full">
+
+                                    {/* Bar */}
+                                    <div
+                                        className={`
+                                            h-full
+                                            rounded-md
+                                            ${status.color}
+                                        `}
+                                        style={{ width: `${status.value}%` }}
+                                    ></div>
+
+                                    {/* Percentage */}
+                                    <span
+                                        className={`
+                                            absolute
+                                            top-1/2
+                                            -translate-y-1/2
+                                            text-sm
+                                            ${status.value >= 50
+                                                ? "left-1/2 -translate-x-1/2 text-white"
+                                                : "text-black"
+                                            }
+                                        `}
+                                        style={
+                                            status.value < 50
+                                                ? { left: `calc(${status.value}% + 8px)` }
+                                                : {}
+                                        }
+                                    >
+                                        {status.value}%
+                                    </span>
+
                                 </div>
                             </div>
                         </div>
@@ -242,7 +252,7 @@ function Landing() {
                                 key={status.name}
                                 className="text-sm font-medium text-gray-800"
                             >
-                                {status.value}
+                                {status.count}
                             </p>
                         ))}
                     </div>
