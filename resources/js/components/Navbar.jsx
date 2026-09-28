@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Navbar() {
+function Navbar({ currentPath }) {
     const navigate = useNavigate();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -123,7 +123,7 @@ function Navbar() {
                         </p>
 
                         <p className="text-[17px] text-gray-500 ml-2">
-                            / Home
+                            / {currentPath}
                         </p>
                     </div>
 

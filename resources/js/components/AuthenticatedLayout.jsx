@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 
 import Navbar from "./Navbar";
 
 function AuthenticatedLayout() {
+    const location = useLocation();
+
     const navigate = useNavigate();
+
+    let page = "Home";
+
+    if (location.pathname === "/employees") {
+        page = "View";
+    }
 
     const [checkingSession, setCheckingSession] = useState(true);
 
@@ -41,7 +49,7 @@ function AuthenticatedLayout() {
         <>
             <div className="min-h-screen">
 
-                <Navbar />
+                <Navbar currentPath={page}/>
 
                 <main className="ml-[40px] md:ml-[260px] mt-[-540px]">
                     <Outlet />
