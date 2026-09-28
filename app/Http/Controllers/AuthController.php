@@ -3,34 +3,26 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $request->validate([
+        $credentials = $request->validate([
             'username' => 'required',
             'password' => 'required',
         ]);
 
-        $user = User::where('username', $request->username)->first();
-
-        if (!$user) {
+        if (!Auth::attempt($credentials)) {
             return response()->json([
                 'message' => 'Invalid username or password.'
             ], 401);
         }
 
-        if (!password_verify($request->password, $user->password)) {
-            return response()->json([
-                'message' => 'Invalid username or password.'
-            ], 401);
-        }
+        $request->session()->regenerate();
 
-        $request->session()->put('user_id', $user->user_id);
-        $request->session()->put('username', $user->username);
-        $request->session()->put('privilege_level', $user->privilege_level);
+        $user = Auth::user();
 
         return response()->json([
             'message' => 'Login successful',
@@ -42,27 +34,30 @@ class AuthController extends Controller
         ]);
     }
 
-
     public function me(Request $request)
     {
-        if (!$request->session()->has('user_id')) {
+        if (!$request->user()) {
             return response()->json([
                 'authenticated' => false
             ], 401);
         }
 
+        $user = $request->user();
+
         return response()->json([
             'authenticated' => true,
             'user' => [
-                'user_id' => $request->session()->get('user_id'),
-                'username' => $request->session()->get('username'),
-                'privilege_level' => $request->session()->get('privilege_level'),
+                'user_id' => $user->user_id,
+                'username' => $user->username,
+                'privilege_level' => $user->privilege_level,
             ]
         ]);
     }
 
     public function logout(Request $request)
     {
+        Auth::logout();
+
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
