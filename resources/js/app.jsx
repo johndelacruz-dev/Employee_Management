@@ -6,7 +6,7 @@ import Login from "./pages/Login";
 import Landing from "./pages/Landing";
 import AuthenticatedLayout from "./components/AuthenticatedLayout";
 import GuestRoute from "./components/GuestRoute";
-import ViewEmployees from "./components/ViewEmployees";
+import ViewEmployees from "./pages/ViewEmployees";
 
 function App() {
     return (
