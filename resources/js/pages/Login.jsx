@@ -1,9 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { router } from "@inertiajs/react";
 
 function Login() {
-    const navigate = useNavigate();
-
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
@@ -26,7 +24,7 @@ function Login() {
 
         if (response.ok) {
             setMessage(data.message);
-            navigate("/landing");
+            router.visit("/landing");
         } else {
             setMessage(data.message);
         }

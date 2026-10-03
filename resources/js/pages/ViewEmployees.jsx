@@ -1,3 +1,5 @@
+import AuthenticatedLayout from "../components/AuthenticatedLayout";
+
 function ViewEmployees() {
     return (
         <div className="flex min-h-screen flex-col">
@@ -120,5 +122,11 @@ function ViewEmployees() {
         </div>
     );
 }
+
+ViewEmployees.layout = page => (
+    <AuthenticatedLayout>
+        {page}
+    </AuthenticatedLayout>
+);
 
 export default ViewEmployees;

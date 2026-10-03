@@ -1,16 +1,14 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { router, usePage } from "@inertiajs/react";
 
 import Navbar from "./Navbar";
 
-function AuthenticatedLayout() {
-    const location = useLocation();
-
-    const navigate = useNavigate();
+function AuthenticatedLayout({ children }) {
+    const { url } = usePage();
 
     let page = "Home";
 
-    if (location.pathname === "/employees") {
+    if (url === "/employees") {
         page = "View";
     }
 
@@ -22,7 +20,7 @@ function AuthenticatedLayout() {
                 const response = await fetch("/api/me");
 
                 if (!response.ok) {
-                    navigate("/login");
+                    router.visit("/login");
                     return;
                 }
 
@@ -34,29 +32,29 @@ function AuthenticatedLayout() {
 
             } catch (error) {
                 console.error("Session check failed:", error);
-                navigate("/login");
+                router.visit("/login");
             }
         }
 
         checkSession();
-    }, [navigate]);
+    }, []);
 
     if (checkingSession) {
-        return (<p>Checking session...</p>);
+        return (
+            <p>Checking session...</p>
+        );
     }
 
     return (
-        <>
-            <div className="min-h-screen">
+        <div className="min-h-screen">
 
-                <Navbar currentPath={page}/>
+            <Navbar currentPath={page} />
 
-                <main className="ml-[40px] md:ml-[260px] mt-[-540px]">
-                    <Outlet />
-                </main>
+            <main className="ml-[40px] md:ml-[260px] mt-[-540px]">
+                {children}
+            </main>
 
-            </div>
-        </>
+        </div>
     );
 }
 

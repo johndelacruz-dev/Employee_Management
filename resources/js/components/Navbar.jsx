@@ -1,8 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, router } from "@inertiajs/react";
 import { useState } from "react";
 
 function Navbar({ currentPath }) {
-    const navigate = useNavigate();
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -12,7 +11,7 @@ function Navbar({ currentPath }) {
         });
 
         if (response.ok) {
-            navigate("/login");
+            router.visit("/login");
         }
     }
     
@@ -35,21 +34,21 @@ function Navbar({ currentPath }) {
                     </p>
 
                     <Link
-                        to="/landing"
+                        href="/landing"
                         className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
                     >
                         Home
                     </Link>
 
                     <Link
-                        to="/employees"
+                        href="/employees"
                         className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
                     >
                         View Employees
                     </Link>
 
                     <Link
-                        to="/employees/add"
+                        href="/employees/add"
                         className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
                     >
                         Add Employees

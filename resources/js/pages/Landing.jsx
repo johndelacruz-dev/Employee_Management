@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
+import AuthenticatedLayout from "../components/AuthenticatedLayout";
 
 function Landing() {
     const [statistics, setStatistics] = useState(null);
 
     useEffect(() => {
-        fetch("http://127.0.0.1:8000/api/employee-statistics", {
+        fetch("/api/employee-statistics", {
             credentials: "include"
         })
             .then(response => response.json())
@@ -30,13 +31,13 @@ function Landing() {
     };
 
     const employeeStatuses = statistics
-    ? statistics.statuses.map((status) => ({
-        name: `${status.status} Employee`,
-        color: statusColors[status.status],
-        value: status.percentage,
-        count: status.count,
-    }))
-    : [];
+        ? statistics.statuses.map((status) => ({
+            name: `${status.status} Employee`,
+            color: statusColors[status.status],
+            value: status.percentage,
+            count: status.count,
+        }))
+        : [];
 
     return (
         <div className="p-5 md:p-6">
@@ -67,7 +68,6 @@ function Landing() {
                     </p>
                 </div>
             </div>
-
 
             {/* Assigned Color Display */}
             <div className="
@@ -113,7 +113,6 @@ function Landing() {
                     ))}
                 </div>
             </div>
-
 
             {/* Percentage Analytics */}
             <div className="
@@ -215,7 +214,6 @@ function Landing() {
                 </div>
             </div>
 
-
             {/* Employee Status Count */}
             <div className="
                 mt-5
@@ -263,5 +261,11 @@ function Landing() {
         </div>
     );
 }
+
+Landing.layout = page => (
+    <AuthenticatedLayout>
+        {page}
+    </AuthenticatedLayout>
+);
 
 export default Landing;

@@ -1,3 +1,5 @@
+import AuthenticatedLayout from "../components/AuthenticatedLayout";
+
 function AddEmployee() {
     const testAddEmployee = async () => {
         const response = await fetch("http://127.0.0.1:8000/api/employees", {
@@ -85,5 +87,11 @@ function AddEmployee() {
         </div>
     );
 }
+
+AddEmployee.layout = page => (
+    <AuthenticatedLayout>
+        {page}
+    </AuthenticatedLayout>
+);
 
 export default AddEmployee;
