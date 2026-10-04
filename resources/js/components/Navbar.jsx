@@ -1,18 +1,14 @@
-import { Link, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import { useState } from "react";
 
 function Navbar({ currentPath }) {
+    const { auth } = usePage().props;
+    const user = auth.user;
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
-    async function handleLogout() {
-        const response = await fetch("/api/logout", {
-            method: "POST",
-        });
-
-        if (response.ok) {
-            router.visit("/login");
-        }
+    function handleLogout() {
+        router.post("/logout");
     }
     
     return (
@@ -128,7 +124,7 @@ function Navbar({ currentPath }) {
 
                     <div className="w-[35px] h-[35px] rounded-full bg-gray-500 flex items-center justify-center mr-2">
                         <p className="text-white text-lg">
-                            U
+                            {user.username.charAt(0).toUpperCase()}
                         </p>
                     </div>
 

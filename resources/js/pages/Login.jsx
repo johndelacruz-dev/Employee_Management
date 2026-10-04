@@ -6,28 +6,21 @@ function Login() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
-    async function handleSubmit(event) {
+    function handleSubmit(event) {
         event.preventDefault();
 
-        const response = await fetch("/api/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
+        router.post("/login", {
+            username,
+            password,
+        }, {
+            onError: (errors) => {
+                setMessage(
+                    errors.username ||
+                    errors.password ||
+                    "Invalid username or password."
+                );
             },
-            body: JSON.stringify({
-                username,
-                password,
-            }),
         });
-
-        const data = await response.json();
-
-        if (response.ok) {
-            setMessage(data.message);
-            router.visit("/landing");
-        } else {
-            setMessage(data.message);
-        }
     }
 
     return (
