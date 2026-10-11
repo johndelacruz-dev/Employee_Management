@@ -4,6 +4,7 @@ import { useState } from "react";
 function Navbar({ currentPath }) {
     const { auth } = usePage().props;
     const user = auth.user;
+    const canAddEmployees = auth.permissions.includes("add employees");
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -43,12 +44,14 @@ function Navbar({ currentPath }) {
                         View Employees
                     </Link>
 
-                    <Link
-                        href="/employees/add"
-                        className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
-                    >
-                        Add Employees
-                    </Link>
+                    {canAddEmployees && (
+                        <Link
+                            href="/employees/add"
+                            className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
+                        >
+                            Add Employees
+                        </Link>
+                    )}
 
                     <button
                         onClick={handleLogout}
