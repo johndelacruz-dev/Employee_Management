@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Employee;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -103,10 +104,73 @@ class EmployeeController extends Controller
         ], 201);
     }
 
-    public function index()
+    
+    public function index(Request $request)
     {
-        $employees = Employee::all();
+        $search = trim($request->query('search', ''));
+
+        $query = DB::table('employee_table')
+            ->join(
+                'job_title_table',
+                'employee_table.job_title_id',
+                '=',
+                'job_title_table.job_title_id'
+            )
+            ->join(
+                'job_position_table',
+                'employee_table.job_position_id',
+                '=',
+                'job_position_table.job_position_id'
+            )
+            ->join(
+                'employee_status_table',
+                'employee_table.employee_status_id',
+                '=',
+                'employee_status_table.employee_status_id'
+            )
+            ->join(
+                'department_table',
+                'employee_table.department_id',
+                '=',
+                'department_table.department_id'
+            )
+            ->join(
+                'gender_table',
+                'employee_table.gender_id',
+                '=',
+                'gender_table.gender_id'
+            )
+            ->select(
+                'employee_table.employee_id',
+                'employee_table.first_name',
+                'employee_table.last_name',
+                'employee_table.contact',
+                'employee_table.email',
+                'employee_table.address',
+                'employee_table.salary',
+                'employee_table.hire_date',
+                'employee_table.job_title_id',
+                'job_title_table.job_title_name',
+                'employee_table.job_position_id',
+                'job_position_table.job_position_name',
+                'employee_table.employee_status_id',
+                'employee_status_table.employee_status_name',
+                'employee_table.department_id',
+                'department_table.department_name',
+                'employee_table.gender_id',
+                'gender_table.gender_name'
+            );
+
+        if ($search !== '') {
+            $query->whereRaw(
+                "CONCAT(employee_table.first_name, ' ', employee_table.last_name) LIKE ?",
+                ['%' . $search . '%']
+            );
+        }
+
+        $employees = $query->get();
 
         return response()->json($employees);
     }
+
 }
