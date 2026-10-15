@@ -1,3 +1,4 @@
+
 <?php
 
 use Inertia\Inertia;
@@ -28,6 +29,12 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/employees/add', function () {
         return Inertia::render('AddEmployees');
-    });
+    })->middleware('permission:add employees');
+
+    Route::get('/employees/{employee}/edit', function ($employee) {
+        return Inertia::render('EditEmployees', [
+            'employeeId' => (int) $employee,
+        ]);
+    })->middleware('permission:edit employees');
 
 });

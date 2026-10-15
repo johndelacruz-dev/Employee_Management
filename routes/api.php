@@ -20,3 +20,5 @@ Route::middleware(['web', 'auth:web', 'permission:add employees'])->group(functi
     Route::get('/employee-statuses', [EmployeeController::class, 'employeeStatuses']);
     Route::get('/genders', [EmployeeController::class, 'genders']);
 });
+
+Route::middleware(['web', 'auth:web', 'permission:edit employees'])->get('/employees/{employee}', [EmployeeController::class, 'show']);

@@ -232,4 +232,20 @@ class EmployeeController extends Controller
                 ->get()
         );
     }
+    
+    public function show($employee)
+    {
+        $employee = DB::table('employee_table')
+            ->where('employee_id', $employee)
+            ->first();
+
+        if (!$employee) {
+            return response()->json([
+                'message' => 'Employee not found.',
+            ], 404);
+        }
+
+        return response()->json($employee);
+    }
+
 }

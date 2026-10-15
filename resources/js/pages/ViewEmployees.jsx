@@ -1,4 +1,4 @@
-import { usePage } from "@inertiajs/react";
+import { usePage, router } from "@inertiajs/react";
 import { useEffect, useState } from "react";
 import AuthenticatedLayout from "../components/AuthenticatedLayout";
 
@@ -114,9 +114,7 @@ function ViewEmployees() {
                 {canEditEmployee && (
                     <button
                         type="button"
-                        onClick={() => {
-                            // Connect to the dedicated edit page later.
-                        }}
+                        onClick={() => router.visit(`/employees/${employee.employee_id}/edit`)}
                         className="
                             rounded-md border border-blue-300
                             px-3 py-2 text-xs font-medium text-blue-700
