@@ -173,4 +173,63 @@ class EmployeeController extends Controller
         return response()->json($employees);
     }
 
+    public function departments()
+    {
+        return response()->json(
+            DB::table('department_table')
+                ->select('department_id', 'department_name')
+                ->orderBy('department_name')
+                ->get()
+        );
+    }
+
+    public function jobTitles(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required|integer',
+        ]);
+
+        return response()->json(
+            DB::table('job_title_table')
+                ->select('job_title_id', 'job_title_name')
+                ->where('department_id', $request->query('department_id'))
+                ->orderBy('job_title_name')
+                ->get()
+        );
+    }
+
+    public function jobPositions(Request $request)
+    {
+        $request->validate([
+            'department_id' => 'required|integer',
+        ]);
+
+        return response()->json(
+            DB::table('job_position_table')
+                ->select('job_position_id', 'job_position_name')
+                ->where('department_id', $request->query('department_id'))
+                ->orderBy('job_position_name')
+                ->get()
+        );
+    }
+
+    public function employeeStatuses()
+    {
+        return response()->json(
+            DB::table('employee_status_table')
+                ->select('employee_status_id', 'employee_status_name')
+                ->orderBy('employee_status_id')
+                ->get()
+        );
+    }
+
+    public function genders()
+    {
+        return response()->json(
+            DB::table('gender_table')
+                ->select('gender_id', 'gender_name')
+                ->orderBy('gender_id')
+                ->get()
+        );
+    }
 }

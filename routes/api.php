@@ -12,3 +12,11 @@ Route::middleware(['web', 'auth:web', 'permission:edit employees'])->put('/emplo
 Route::middleware(['web', 'auth:web', 'permission:delete employees'])->delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 
 Route::middleware(['web', 'auth:web', 'permission:view employees'])->get('/employee-statistics', [EmployeeController::class, 'statistics']);
+
+Route::middleware(['web', 'auth:web', 'permission:add employees'])->group(function () {
+    Route::get('/departments', [EmployeeController::class, 'departments']);
+    Route::get('/job-titles', [EmployeeController::class, 'jobTitles']);
+    Route::get('/job-positions', [EmployeeController::class, 'jobPositions']);
+    Route::get('/employee-statuses', [EmployeeController::class, 'employeeStatuses']);
+    Route::get('/genders', [EmployeeController::class, 'genders']);
+});

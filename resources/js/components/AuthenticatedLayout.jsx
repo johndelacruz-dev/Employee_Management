@@ -9,6 +9,8 @@ function AuthenticatedLayout({ children }) {
 
     if (url === "/employees") {
         page = "View";
+    } else if (url === "/employees/add") {
+        page = "Add Employee";
     }
 
     return (
