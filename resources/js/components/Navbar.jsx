@@ -11,35 +11,61 @@ function Navbar({ currentPath }) {
     function handleLogout() {
         router.post("/logout");
     }
-    
+
+    const menuClass =
+        "block rounded-lg px-5 py-3 mb-3 text-[#C1F6ED] hover:bg-[#2EAF7D] hover:text-white transition-colors duration-200";
+
     return (
         <div className="flex flex-col h-screen">
 
-            {/* Sidebar */}
-            <div className={`fixed left-0 top-0 h-screen w-[260px] border-r-2 border-gray-200 bg-white transition-transform duration-300 md:translate-x-0 z-31 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}>
+            <div
+                className={`fixed left-0 top-0 z-40 h-screen w-[260px] border-r border-[#2EAF7D] bg-[#02353C] transition-transform duration-300 md:translate-x-0 ${
+                    sidebarOpen
+                        ? "translate-x-0"
+                        : "-translate-x-full"
+                }`}
+            >
 
-                {/* Logo */}
-                <div className="border-b-2 border-gray-200 px-5 py-4 font-bold">
-                    <p>Employee Management</p>
+                <div className="border-b border-[#2EAF7D] px-5 py-5 font-bold text-white">
+                    <p className="text-lg">
+                        Employee Management
+                    </p>
+
+                    <p className="mt-1 text-xs font-normal text-[#C1F6ED]">
+                        Management System
+                    </p>
                 </div>
 
-                {/* Menu */}
-                <div className="flex flex-col px-5 pt-8">
+                <div className="flex flex-col px-4 pt-12">
 
-                    <p className="text-sm text-gray-500 mb-4">
+                    <p className="mb-4 px-5 text-xs font-semibold uppercase tracking-widest text-[#3FD0C9]">
                         Main Menu
                     </p>
 
                     <Link
                         href="/landing"
-                        className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
+                        className={`${menuClass} ${
+                            currentPath === "Home"
+                                ? "bg-[#2EAF7D] text-white"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            setSidebarOpen(false)
+                        }
                     >
                         Home
                     </Link>
 
                     <Link
                         href="/employees"
-                        className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
+                        className={`${menuClass} ${
+                            currentPath === "View Employees"
+                                ? "bg-[#2EAF7D] text-white"
+                                : ""
+                        }`}
+                        onClick={() =>
+                            setSidebarOpen(false)
+                        }
                     >
                         View Employees
                     </Link>
@@ -47,82 +73,73 @@ function Navbar({ currentPath }) {
                     {canAddEmployees && (
                         <Link
                             href="/employees/add"
-                            className="px-5 py-2.5 mb-3 rounded-md text-gray-600 hover:text-black hover:bg-gray-100"
+                            className={`${menuClass} ${
+                                currentPath === "Add Employees"
+                                    ? "bg-[#2EAF7D] text-white"
+                                    : ""
+                            }`}
+                            onClick={() =>
+                                setSidebarOpen(false)
+                            }
                         >
                             Add Employees
                         </Link>
                     )}
 
+                    <div className="my-4 border-t border-[#2EAF7D]/60" />
+
                     <button
                         onClick={handleLogout}
-                        className="flex text-left px-5 py-2.5 rounded-md text-gray-600 hover:text-black hover:bg-gray-100 cursor-pointer"
+                        className="w-full cursor-pointer rounded-lg px-5 py-3 text-left text-[#C1F6ED] transition-colors hover:bg-[#449342] hover:text-white"
                     >
                         Logout
                     </button>
 
                 </div>
+
+                <div className="absolute bottom-0 w-full border-t border-[#2EAF7D]/60 px-5 py-4">
+                    <p className="text-xs text-[#C1F6ED]">
+                        Employee Management System
+                    </p>
+                </div>
+
             </div>
 
-            {/* Mobile arrow button */}
             <button
-                onClick={() => setSidebarOpen(!sidebarOpen)}
-                className={`
-                    fixed
-                    left-0
-                    top-1/3
-                    z-[100]
-                    flex
-                    h-14
-                    w-10
-                    -translate-y-1/2
-                    items-center
-                    justify-center
-                    rounded-r-lg
-                    border
-                    border-gray-300
-                    bg-gray-200
-                    text-2xl
-                    text-gray-700
-                    shadow-md
-                    hover:bg-gray-300
-                    transition-transform
-                    duration-300
-                    ${sidebarOpen ? "translate-x-[260px]" : "translate-x-0"}
-
-                    md:hidden
-                `}
+                onClick={() =>
+                    setSidebarOpen(!sidebarOpen)
+                }
+                aria-label={
+                    sidebarOpen
+                        ? "Close sidebar"
+                        : "Open sidebar"
+                }
+                aria-expanded={sidebarOpen}
+                className={`fixed left-0 top-1/3 z-[100] flex h-14 w-10 -translate-y-1/2 items-center justify-center rounded-r-lg border border-[#2EAF7D] bg-[#02353C] text-2xl text-white shadow-md transition-transform duration-300 hover:bg-[#2EAF7D] ${
+                    sidebarOpen
+                        ? "translate-x-[260px]"
+                        : "translate-x-0"
+                } md:hidden`}
             >
-                <span className="text-xl">
+                <span>
                     {sidebarOpen ? "‹" : "›"}
                 </span>
             </button>
 
-            {/* Top-side header */}
-            <div className={`
-                ml-0 
-                flex-1 
-                bg-white
-                fixed
-                top-0
-                right-0
-                left-0
-                md:left-[260px]
-                z-30
-                border-b-2
-                border-gray-200
-                bg-white
-            `}>
+            <div className="fixed left-0 right-0 top-0 z-30 border-b border-[#D5EAE5] bg-white md:left-[260px]">
 
-                <div className="flex items-center justify-between border-b-2 border-gray-200 px-5 py-3">
+                <div className="flex items-center justify-between px-5 py-4">
 
-                    <div className="flex items-center">
-                        <p className="text-[17px]">
+                    <div className="flex min-w-0 items-center">
+
+                        <p className="font-semibold text-[#02353C]">
                             Management
                         </p>
 
-                        <p className="text-[17px] text-gray-500 ml-2">
+                        <p className="ml-2 truncate text-[#449342]">
                             / {currentPath}
                         </p>
+
                     </div>
 
                     <Link
