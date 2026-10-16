@@ -25,7 +25,7 @@ function AuthenticatedLayout({ children }) {
 
             <Navbar currentPath={page} />
 
-            <main className="ml-[40px] md:ml-[260px] mt-[-540px]">
+            <main className="ml-[10px] md:ml-[260px] md:mt-[-640px] mt-[-540px]">
                 {children}
             </main>
 
