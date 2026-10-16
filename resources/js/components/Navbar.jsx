@@ -125,11 +125,18 @@ function Navbar({ currentPath }) {
                         </p>
                     </div>
 
-                    <div className="w-[35px] h-[35px] rounded-full bg-gray-500 flex items-center justify-center mr-2">
-                        <p className="text-white text-lg">
-                            {user.username.charAt(0).toUpperCase()}
-                        </p>
-                    </div>
+                    <Link
+                        href="/profile"
+                        title="My Account"
+                        aria-label="Open My Account"
+                        className="ml-3 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#449342] font-semibold text-white transition-all duration-200 hover:bg-[#2EAF7D] hover:ring-4 hover:ring-[#3FD0C9]/30"
+                    >
+                        {user?.username
+                            ? user.username
+                                  .charAt(0)
+                                  .toUpperCase()
+                            : "A"}
+                    </Link>
 
                 </div>
 

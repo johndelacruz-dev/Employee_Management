@@ -37,4 +37,8 @@ Route::middleware('auth')->group(function () {
         ]);
     })->middleware('permission:edit employees');
 
+    Route::get('/profile', function () {
+        return Inertia::render('Profile');
+    });
+
 });

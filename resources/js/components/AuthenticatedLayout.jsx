@@ -11,6 +11,13 @@ function AuthenticatedLayout({ children }) {
         page = "View";
     } else if (url === "/employees/add") {
         page = "Add Employee";
+    } else if (
+        url.startsWith("/employees/") &&
+        url.endsWith("/edit")
+    ) {
+        page = "Edit Employee";
+    } else if (url === "/profile") {
+        page = "My Account";
     }
 
     return (
