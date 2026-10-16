@@ -7,6 +7,17 @@ function ViewEmployees() {
     const [search, setSearch] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showFilters, setShowFilters] = useState(false);
+    const [filters, setFilters] = useState({
+        department_id: "",
+        job_title_id: "",
+        employee_status_id: "",
+    });
+    const [options, setOptions] = useState({
+        departments: [],
+        job_titles: [],
+        statuses: [],
+    });
 
     const { auth } = usePage().props;
 
@@ -17,7 +28,7 @@ function ViewEmployees() {
 
     const canManageEmployees = canEditEmployee || canDeleteEmployee;
 
-    async function loadEmployees(searchValue = "") {
+    async function loadEmployees(searchValue = "", filterValues = {}) {
         setLoading(true);
         setError("");
 
@@ -27,6 +38,12 @@ function ViewEmployees() {
             if (searchValue.trim() !== "") {
                 params.set("search", searchValue.trim());
             }
+
+            Object.entries(filterValues).forEach(([key, value]) => {
+                if (value !== "") {
+                    params.set(key, value);
+                }
+            });
 
             const response = await fetch(
                 `/api/employees?${params.toString()}`,
@@ -52,11 +69,57 @@ function ViewEmployees() {
 
     useEffect(() => {
         loadEmployees();
+
+        fetch("/api/employee-filter-options", {
+            headers: { Accept: "application/json" },
+            credentials: "same-origin",
+        })
+            .then((response) => (response.ok ? response.json() : null))
+            .then((data) => {
+                if (data) setOptions(data);
+            })
+            .catch(() => {});
     }, []);
+
+    const activeFilterCount = Object.values(filters).filter(
+        (value) => value !== ""
+    ).length;
+
+    // Job titles belong to a department, so narrow the list when one is picked
+    const visibleJobTitles = filters.department_id
+        ? options.job_titles.filter(
+              (title) =>
+                  String(title.department_id) === filters.department_id
+          )
+        : options.job_titles;
 
     function handleSearch(event) {
         event.preventDefault();
-        loadEmployees(search);
+        loadEmployees(search, filters);
+    }
+
+    function handleFilterChange(name, value) {
+        const next = { ...filters, [name]: value };
+
+        // Changing department invalidates a job title from another department
+        if (name === "department_id") {
+            next.job_title_id = "";
+        }
+
+        setFilters(next);
+        loadEmployees(search, next);
+    }
+
+    function handleClear() {
+        const cleared = {
+            department_id: "",
+            job_title_id: "",
+            employee_status_id: "",
+        };
+
+        setSearch("");
+        setFilters(cleared);
+        loadEmployees("", cleared);
     }
 
     async function handleDelete(employee) {
@@ -98,7 +161,7 @@ function ViewEmployees() {
                 );
             }
 
-            await loadEmployees(search);
+            await loadEmployees(search, filters);
         } catch (err) {
             setError(err.message || "Something went wrong.");
         }
@@ -180,15 +243,92 @@ function ViewEmployees() {
 
                         <button
                             type="button"
+                            onClick={() => setShowFilters((open) => !open)}
                             className="
                                 h-10 rounded-md border border-gray-300
                                 px-5 text-sm font-medium text-gray-700
                                 hover:bg-gray-100
                             "
                         >
-                            Filter
+                            Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ""}
                         </button>
                     </form>
+
+                    {/* Filter Panel */}
+                    {showFilters && (
+                        <div className="mt-3 flex flex-wrap items-end gap-3 rounded-md border border-gray-200 bg-gray-50 p-3">
+                            <label className="flex min-w-[160px] flex-1 flex-col gap-1 text-xs font-medium text-gray-600">
+                                Department
+                                <select
+                                    value={filters.department_id}
+                                    onChange={(event) =>
+                                        handleFilterChange("department_id", event.target.value)
+                                    }
+                                    className="h-10 rounded-md border border-gray-300 bg-white px-2 text-sm font-normal text-gray-800"
+                                >
+                                    <option value="">All departments</option>
+                                    {options.departments.map((department) => (
+                                        <option
+                                            key={department.department_id}
+                                            value={department.department_id}
+                                        >
+                                            {department.department_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label className="flex min-w-[160px] flex-1 flex-col gap-1 text-xs font-medium text-gray-600">
+                                Job Title
+                                <select
+                                    value={filters.job_title_id}
+                                    onChange={(event) =>
+                                        handleFilterChange("job_title_id", event.target.value)
+                                    }
+                                    className="h-10 rounded-md border border-gray-300 bg-white px-2 text-sm font-normal text-gray-800"
+                                >
+                                    <option value="">All job titles</option>
+                                    {visibleJobTitles.map((title) => (
+                                        <option
+                                            key={title.job_title_id}
+                                            value={title.job_title_id}
+                                        >
+                                            {title.job_title_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <label className="flex min-w-[160px] flex-1 flex-col gap-1 text-xs font-medium text-gray-600">
+                                Employee Status
+                                <select
+                                    value={filters.employee_status_id}
+                                    onChange={(event) =>
+                                        handleFilterChange("employee_status_id", event.target.value)
+                                    }
+                                    className="h-10 rounded-md border border-gray-300 bg-white px-2 text-sm font-normal text-gray-800"
+                                >
+                                    <option value="">All statuses</option>
+                                    {options.statuses.map((status) => (
+                                        <option
+                                            key={status.employee_status_id}
+                                            value={status.employee_status_id}
+                                        >
+                                            {status.employee_status_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            </label>
+
+                            <button
+                                type="button"
+                                onClick={handleClear}
+                                className="h-10 rounded-md border border-gray-300 bg-white px-4 text-sm font-medium text-gray-700 hover:bg-gray-100"
+                            >
+                                Clear
+                            </button>
+                        </div>
+                    )}
 
                     {/* Error Message */}
                     {error && (
@@ -366,7 +506,7 @@ function ViewEmployees() {
                     {/* Empty Results */}
                     {!loading && !error && employees.length === 0 && (
                         <p className="py-8 text-center text-sm text-gray-500">
-                            {search.trim()
+                            {search.trim() || activeFilterCount > 0
                                 ? "No employees found matching your search."
                                 : "No employee records found."}
                         </p>

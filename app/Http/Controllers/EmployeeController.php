@@ -168,9 +168,42 @@ class EmployeeController extends Controller
             );
         }
 
-        $employees = $query->get();
+        foreach ([
+            'department_id' => 'employee_table.department_id',
+            'employee_status_id' => 'employee_table.employee_status_id',
+            'job_title_id' => 'employee_table.job_title_id',
+            'gender_id' => 'employee_table.gender_id',
+        ] as $param => $column) {
+            $value = $request->query($param);
+
+            if ($value !== null && $value !== '' && is_numeric($value)) {
+                $query->where($column, (int) $value);
+            }
+        }
+
+        $employees = $query->orderBy('employee_table.last_name')
+            ->orderBy('employee_table.first_name')
+            ->get();
 
         return response()->json($employees);
+    }
+
+    public function filterOptions()
+    {
+        return response()->json([
+            'departments' => DB::table('department_table')
+                ->select('department_id', 'department_name')
+                ->orderBy('department_name')
+                ->get(),
+            'job_titles' => DB::table('job_title_table')
+                ->select('job_title_id', 'job_title_name', 'department_id')
+                ->orderBy('job_title_name')
+                ->get(),
+            'statuses' => DB::table('employee_status_table')
+                ->select('employee_status_id', 'employee_status_name')
+                ->orderBy('employee_status_id')
+                ->get(),
+        ]);
     }
 
     public function departments()

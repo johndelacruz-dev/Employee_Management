@@ -11,6 +11,8 @@ Route::middleware(['web', 'auth:web', 'permission:edit employees'])->put('/emplo
 
 Route::middleware(['web', 'auth:web', 'permission:delete employees'])->delete('/employees/{employee}', [EmployeeController::class, 'destroy']);
 
+Route::middleware(['web', 'auth:web', 'permission:view employees'])->get('/employee-filter-options', [EmployeeController::class, 'filterOptions']);
+
 Route::middleware(['web', 'auth:web', 'permission:view employees'])->get('/employee-statistics', [EmployeeController::class, 'statistics']);
 
 Route::middleware(['web', 'auth:web', 'permission:add employees'])->group(function () {
